@@ -8,10 +8,10 @@ import (
 )
 
 type EntryAPI struct {
-	UUID        string    `json:"uuid"`
-	AccountUUID string    `json:"account_uuid"`
-	Amount      float64   `json:"amount"`
-	CreatedAt   time.Time `json:"created_at"`
+	UUID      string    `json:"uuid"`
+	Owner     string    `json:"account_uuid"`
+	Amount    float64   `json:"amount"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func (ea *EntryAPI) ToEntity() (*entity.Entry, error) {
@@ -24,16 +24,16 @@ func (ea *EntryAPI) ToEntity() (*entity.Entry, error) {
 		return nil, err
 	}
 
-	parseAccount, err := uuid.Parse(ea.AccountUUID)
+	parseOwner, err := uuid.Parse(ea.Owner)
 	if err != nil {
 		return nil, err
 	}
 
 	return &entity.Entry{
-		UUID:        parse,
-		AccountUUID: parseAccount,
-		Amount:      ea.Amount,
-		CreatedAt:   ea.CreatedAt,
+		UUID:      parse,
+		Owner:     parseOwner,
+		Amount:    ea.Amount,
+		CreatedAt: ea.CreatedAt,
 	}, nil
 }
 
@@ -43,7 +43,6 @@ func (ea *EntryAPI) FromEntity(entry entity.Entry) {
 	}
 
 	ea.UUID = entry.UUID.String()
-	ea.AccountUUID = entry.AccountUUID.String()
-	ea.Amount = entry.Amount
+	ea.Owner = entry.Owner.String()
 	ea.CreatedAt = entry.CreatedAt
 }
