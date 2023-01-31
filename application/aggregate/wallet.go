@@ -58,7 +58,6 @@ func NewWallet(name, personalID, email, password string, isAShopKeeper bool) (Wa
 	}
 
 	account := &entity.Account{
-		UUID:      uuid.New(),
 		Owner:     personUUID,
 		Balance:   0,
 		CreatedAt: time.Now(),
@@ -85,17 +84,6 @@ func (w *Wallet) SetID(id uuid.UUID) {
 
 func (w *Wallet) GetPerson() entity.Person {
 	return *w.person
-}
-
-func (w *Wallet) GetAccountID() uuid.UUID {
-	return w.account.UUID
-}
-
-func (w *Wallet) SetAccountID(id uuid.UUID) {
-	if w.person.IsEmpty() {
-		w.person = &entity.Person{}
-	}
-	w.account.UUID = id
 }
 
 func (w *Wallet) GetAccount() *entity.Account {
