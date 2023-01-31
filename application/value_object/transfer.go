@@ -8,10 +8,10 @@ import (
 )
 
 type Transfer struct {
-	FromAccountUUID uuid.UUID
-	ToAccountUUID   uuid.UUID
-	Amount          float64
-	CreatedAt       time.Time
+	FromWalletUUID uuid.UUID
+	ToWalletUUID   uuid.UUID
+	Amount         float64
+	CreatedAt      time.Time
 }
 
 func (t *Transfer) IsEmpty() bool {

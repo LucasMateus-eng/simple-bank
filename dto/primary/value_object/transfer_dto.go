@@ -8,10 +8,10 @@ import (
 )
 
 type TransferAPI struct {
-	FromAccountUUID string    `json:"from_account_uuid"`
-	ToAccountUUID   string    `json:"to_account_uuid"`
-	Amount          float64   `json:"amount"`
-	CreatedAt       time.Time `json:"created_at"`
+	FromWalletUUID string    `json:"from_wallet_uuid"`
+	ToWalletUUID   string    `json:"to_wallet_uuid"`
+	Amount         float64   `json:"amount"`
+	CreatedAt      time.Time `json:"created_at"`
 }
 
 func (ta *TransferAPI) ToValueObject() (*valueobject.Transfer, error) {
@@ -19,21 +19,21 @@ func (ta *TransferAPI) ToValueObject() (*valueobject.Transfer, error) {
 		ta = &TransferAPI{}
 	}
 
-	parseFromAccount, err := uuid.Parse(ta.FromAccountUUID)
+	parseFromWallet, err := uuid.Parse(ta.FromWalletUUID)
 	if err != nil {
 		return nil, err
 	}
 
-	parseToAccount, err := uuid.Parse(ta.ToAccountUUID)
+	parseToWallet, err := uuid.Parse(ta.ToWalletUUID)
 	if err != nil {
 		return nil, err
 	}
 
 	return &valueobject.Transfer{
-		FromAccountUUID: parseFromAccount,
-		ToAccountUUID:   parseToAccount,
-		Amount:          ta.Amount,
-		CreatedAt:       ta.CreatedAt,
+		FromWalletUUID: parseFromWallet,
+		ToWalletUUID:   parseToWallet,
+		Amount:         ta.Amount,
+		CreatedAt:      ta.CreatedAt,
 	}, nil
 }
 
@@ -42,8 +42,8 @@ func (ta *TransferAPI) FromValueObject(transfer valueobject.Transfer) {
 		ta = &TransferAPI{}
 	}
 
-	ta.FromAccountUUID = transfer.FromAccountUUID.String()
-	ta.ToAccountUUID = transfer.ToAccountUUID.String()
+	ta.FromWalletUUID = transfer.FromWalletUUID.String()
+	ta.ToWalletUUID = transfer.ToWalletUUID.String()
 	ta.Amount = transfer.Amount
 	ta.CreatedAt = transfer.CreatedAt
 }
