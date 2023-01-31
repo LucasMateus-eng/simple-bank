@@ -84,7 +84,6 @@ func (wa *WalletAPI) FromAggregate(wallet aggregate.Wallet) {
 	wac := wallet.GetAccount()
 	if !wac.IsEmpty() {
 		account = apientity.AccountAPI{
-			UUID:      wac.UUID.String(),
 			Owner:     wac.Owner.String(),
 			Balance:   wac.Balance,
 			CreatedAt: wac.CreatedAt,
