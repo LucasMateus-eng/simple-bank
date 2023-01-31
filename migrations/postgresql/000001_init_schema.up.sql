@@ -1,73 +1,32 @@
-CREATE TABLE "persons" (
+CREATE TABLE "wallets" (
   "id" bigserial PRIMARY KEY,
-  "uuid" varchar NOT NULL,
-  "name" varchar NOT NULL,
-  "personal_id" varchar NOT NULL,
-  "email" varchar NOT NULL,
-  "password" varchar NOT NULL,
-  "is_a_shopkeeper" boolean NOT NULL
-);
-
-CREATE TABLE "accounts" (
-  "id" bigserial PRIMARY KEY,
-  "uuid" varchar NOT NULL,
-  "owner" varchar NOT NULL,
+  "uuid" text NOT NULL UNIQUE,
+  "name" text NOT NULL,
+  "personal_id" text NOT NULL UNIQUE,
+  "email" text NOT NULL UNIQUE,
+  "password" text NOT NULL,
+  "is_a_shopkeeper" boolean NOT NULL,
   "balance" decimal NOT NULL,
-  "created_at" timestamptz NOT NULL DEFAULT (now())
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  "entries" text [],
+  "transfers" text []
 );
 
 CREATE TABLE "entries" (
   "id" bigserial PRIMARY KEY,
-  "uuid" varchar NOT NULL,
-  "account_uuid" varchar NOT NULL,
+  "uuid" text NOT NULL UNIQUE,
+  "wallet_uuid" text NOT NULL,
   "amount" decimal NOT NULL,
-  "created_at" timestamptz NOT NULL DEFAULT (now())
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  CONSTRAINT fk_wallet FOREIGN KEY("wallet_uuid") REFERENCES wallets("uuid") ON DELETE CASCADE
 );
 
 CREATE TABLE "transfers" (
   "id" bigserial PRIMARY KEY,
-  "from_account_id" varchar NOT NULL,
-  "to_account_id" varchar NOT NULL,
+  "from_account_uuid" text NOT NULL,
+  "to_account_uuid" text NOT NULL,
   "amount" decimal NOT NULL,
-  "created_at" timestamptz NOT NULL DEFAULT (now())
+  "created_at" timestamptz NOT NULL DEFAULT (now()),
+  CONSTRAINT fk_from_account FOREIGN KEY("from_account_uuid") REFERENCES wallets("uuid") ON DELETE CASCADE,
+  CONSTRAINT fk_to_account FOREIGN KEY("to_account_uuid") REFERENCES wallets("uuid") ON DELETE CASCADE
 );
-
-CREATE TABLE "wallets" (
-  "id" bigserial PRIMARY KEY,
-  "person_uuid" string NOT NULL,
-  "account_uuid" string NOT NULL,
-  "entries" string[],
-  "transfers" bigserial[]
-);
-
-CREATE INDEX ON "persons" ("uuid");
-
-CREATE INDEX ON "persons" ("personal_id");
-
-CREATE INDEX ON "persons" ("email");
-
-CREATE INDEX ON "accounts" ("owner");
-
-CREATE INDEX ON "entries" ("account_uuid");
-
-CREATE INDEX ON "transfers" ("from_account_id");
-
-CREATE INDEX ON "transfers" ("to_account_id");
-
-CREATE INDEX ON "transfers" ("from_account_id", "to_account_id");
-
-ALTER TABLE "accounts" ADD FOREIGN KEY ("owner") REFERENCES "persons" ("uuid") ON DELETE CASCADE;
-
-ALTER TABLE "entries" ADD FOREIGN KEY ("account_uuid") REFERENCES "accounts" ("uuid") ON DELETE CASCADE;
-
-ALTER TABLE "transfers" ADD FOREIGN KEY ("from_account_id") REFERENCES "accounts" ("uuid") ON DELETE CASCADE;
-
-ALTER TABLE "transfers" ADD FOREIGN KEY ("to_account_id") REFERENCES "accounts" ("uuid") ON DELETE CASCADE;
-
-ALTER TABLE "wallets" ADD FOREIGN KEY ("person_uuid") REFERENCES "persons" ("uuid") ON DELETE CASCADE;
-
-ALTER TABLE "wallets" ADD FOREIGN KEY ("account_uuid") REFERENCES "accounts" ("uuid") ON DELETE CASCADE;
-
-ALTER TABLE "entries" ADD FOREIGN KEY ("uuid") REFERENCES "wallets" ("entries") ON DELETE CASCADE;
-
-ALTER TABLE "transfers" ADD FOREIGN KEY ("id") REFERENCES "wallets" ("transfers") ON DELETE CASCADE;
