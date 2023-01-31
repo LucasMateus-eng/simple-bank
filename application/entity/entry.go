@@ -8,10 +8,10 @@ import (
 )
 
 type Entry struct {
-	UUID        uuid.UUID
-	AccountUUID uuid.UUID
-	Amount      float64
-	CreatedAt   time.Time
+	UUID      uuid.UUID
+	Owner     uuid.UUID
+	Amount    float64
+	CreatedAt time.Time
 }
 
 func (e *Entry) IsEmpty() bool {

@@ -8,7 +8,6 @@ import (
 )
 
 type Account struct {
-	UUID      uuid.UUID
 	Owner     uuid.UUID
 	Balance   float64
 	CreatedAt time.Time
