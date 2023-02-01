@@ -65,7 +65,7 @@ func (wr *walletPostgreSQLRepo) Add(wallet aggregate.Wallet) error {
 func (wr *walletPostgreSQLRepo) Update(wallet aggregate.Wallet) error {
 	wg := gormaggregate.NewRow(wallet)
 
-	if err := wr.db.Where("uuid = ?", wallet.GetID()).Updates(&wg).Error; err != nil {
+	if err := wr.db.Where("uuid = ?", wallet.GetID()).Omit("uuid", "balance", "created_at", "entries", "transfers").Updates(&wg).Error; err != nil {
 		log.Errorf("Erro ao atualizar a carteira %s no repositório PostgreSQL. Detalhes: %s", wallet.GetID(), err.Error())
 		return err
 	}
