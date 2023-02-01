@@ -31,20 +31,20 @@ func NewWalletPostgreSQLRepo(db *gorm.DB) secondaryport.WalletRepository {
 
 func (wr *walletPostgreSQLRepo) Get(id uuid.UUID) (aggregate.Wallet, error) {
 	var wg gormaggregate.WalletGorm
-	if err := wr.db.First(&wg, "person_uuid = ?", id).Error; err != nil {
-		log.Error("Erro ao obter carteira no repositório PostgreSQL: ", err.Error())
+	if err := wr.db.First(&wg, "uuid = ?", id).Error; err != nil {
+		log.Errorf("Erro ao obter carteira %s no repositório PostgreSQL. Detalhes: %s", id.String(), err.Error())
 		return aggregate.Wallet{}, err
 	}
 
 	wallet, err := wg.ToAggregate()
 	if err != nil {
-		log.Error("Erro ao converter o dto da carteira para o seu agregado: ", err.Error())
+		log.Errorf("Erro ao converter o dto da carteira %s para o seu agregado. Detalhes: %s", id.String(), err.Error())
 		return aggregate.Wallet{}, err
 	}
 
 	if wallet.IsEmpty() {
 		err := fmt.Errorf("não foi possível consultar a carteira %s no banco de dados", id)
-		log.Error("Erro ao obter carteira no repositório PostgreSQL: ", err.Error())
+		log.Errorf("Erro ao obter carteira %s no repositório PostgreSQL. Detalhes: %s", id.String(), err.Error())
 		return aggregate.Wallet{}, err
 	}
 
@@ -65,8 +65,8 @@ func (wr *walletPostgreSQLRepo) Add(wallet aggregate.Wallet) error {
 func (wr *walletPostgreSQLRepo) Update(wallet aggregate.Wallet) error {
 	wg := gormaggregate.NewRow(wallet)
 
-	if err := wr.db.Where("person_uuid = ?", wallet.GetID()).Updates(&wg).Error; err != nil {
-		log.Error("Erro ao atualizar a carteira no repositório PostgreSQL: ", err.Error())
+	if err := wr.db.Where("uuid = ?", wallet.GetID()).Updates(&wg).Error; err != nil {
+		log.Errorf("Erro ao atualizar a carteira %s no repositório PostgreSQL. Detalhes: %s", wallet.GetID(), err.Error())
 		return err
 	}
 
