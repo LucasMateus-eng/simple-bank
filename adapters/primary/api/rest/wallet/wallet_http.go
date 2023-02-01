@@ -6,6 +6,7 @@ import (
 
 	primaryport "github.com/LucasMateus-eng/simple-bank/application/ports/primary/wallet"
 	apiaggregate "github.com/LucasMateus-eng/simple-bank/dto/primary/aggregate"
+	apivalueobject "github.com/LucasMateus-eng/simple-bank/dto/primary/value_object"
 	"github.com/LucasMateus-eng/simple-bank/utils/formatter"
 	"github.com/LucasMateus-eng/simple-bank/utils/logging"
 	"github.com/google/uuid"
@@ -159,4 +160,26 @@ func (wh *WalletHandler) Delete(c echo.Context) error {
 	}
 
 	return formatter.SuccessJSON(c, http.StatusNoContent, "Carteira excluída com sucesso")
+}
+
+func (wh *WalletHandler) Transfer(c echo.Context) error {
+	var body = new(apivalueobject.TransferAPI)
+	if err := c.Bind(&body); err != nil {
+		log.Error("Erro ao realizar transferência na API rest: ", err.Error())
+		return formatter.ErrorWithDataJSON(c, http.StatusBadRequest, "Payload inválido", err.Error())
+	}
+
+	transfer, err := body.ToValueObject()
+	if err != nil {
+		log.Error("Erro ao realizar transferência na API rest: ", err.Error())
+		return formatter.ErrorWithDataJSON(c, http.StatusInternalServerError, "Erro ao converter para objeto de valor", err.Error())
+	}
+
+	err = wh.walletService.Transfer(*transfer)
+	if err != nil {
+		log.Error("Erro ao realizar transferência na API rest: ", err.Error())
+		return formatter.ErrorWithDataJSON(c, http.StatusInternalServerError, "Erro ao realizar transferência", err.Error())
+	}
+
+	return formatter.SuccessJSON(c, http.StatusNoContent, "Transferência realizada com sucesso")
 }
