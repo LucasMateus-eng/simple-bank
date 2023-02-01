@@ -2,6 +2,7 @@ package wallet
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/LucasMateus-eng/simple-bank/application/aggregate"
 	secondaryport "github.com/LucasMateus-eng/simple-bank/application/ports/secondary/wallet"
@@ -30,21 +31,83 @@ func NewWalletPostgreSQLRepo(db *gorm.DB) secondaryport.WalletRepository {
 }
 
 func (wr *walletPostgreSQLRepo) Get(id uuid.UUID) (aggregate.Wallet, error) {
-	var wg gormaggregate.WalletGorm
-	if err := wr.db.First(&wg, "uuid = ?", id).Error; err != nil {
-		log.Errorf("Erro ao obter carteira %s no repositório PostgreSQL. Detalhes: %s", id.String(), err.Error())
+	tx := wr.db.Begin()
+	defer func() {
+		if wr := recover(); wr != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
 		return aggregate.Wallet{}, err
 	}
 
-	wallet, err := wg.ToAggregate()
+	var walletGorm gormaggregate.WalletGorm
+	if err := tx.First(&walletGorm, "uuid = ?", id).Error; err != nil {
+		log.Errorf("Erro ao obter carteira %s no repositório PostgreSQL. Detalhes: %s", id.String(), err.Error())
+		tx.Rollback()
+		return aggregate.Wallet{}, err
+	}
+
+	wallet, err := walletGorm.ToAggregate()
 	if err != nil {
 		log.Errorf("Erro ao converter o dto da carteira %s para o seu agregado. Detalhes: %s", id.String(), err.Error())
+		tx.Rollback()
 		return aggregate.Wallet{}, err
 	}
 
 	if wallet.IsEmpty() {
 		err := fmt.Errorf("não foi possível consultar a carteira %s no banco de dados", id)
 		log.Errorf("Erro ao obter carteira %s no repositório PostgreSQL. Detalhes: %s", id.String(), err.Error())
+		tx.Rollback()
+		return aggregate.Wallet{}, err
+	}
+
+	if len(wallet.GetEntries()) > 0 {
+		for _, entryUUID := range walletGorm.Entries {
+			var entryGorm gormentity.EntryGorm
+			if err = tx.First(&entryGorm, "uuid = ?", entryUUID).Error; err != nil {
+				log.Errorf("Erro ao obter entrada %s no repositório PostgreSQL. Detalhes: %s", entryUUID, err.Error())
+				tx.Rollback()
+				return aggregate.Wallet{}, err
+			}
+
+			entry, err := entryGorm.ToEntity()
+			if err != nil {
+				log.Errorf("Erro ao converter o dto da entrada %s para a sua entidade. Detalhes: %s", entryUUID, err.Error())
+				tx.Rollback()
+				return aggregate.Wallet{}, err
+			}
+
+			wallet.SetEntries(entry)
+		}
+	}
+
+	if len(wallet.GetTransfers()) > 0 {
+		for _, transferUUIDCombine := range walletGorm.Transfers {
+			uuidList := strings.Split(transferUUIDCombine, "|")
+
+			var transferGorm gormvalueobject.TransferGorm
+			if err = tx.First(&transferGorm, "from_wallet_uuid = ? AND to_wallet_uuid = ?", uuidList[0], uuidList[1]).Error; err != nil {
+				log.Errorf("Erro ao obter transferência %s no repositório PostgreSQL. Detalhes: %s", transferUUIDCombine, err.Error())
+				tx.Rollback()
+				return aggregate.Wallet{}, err
+			}
+
+			transfer, err := transferGorm.ToValueObject()
+			if err != nil {
+				log.Errorf("Erro ao converter o dto da transferência %s para o seu objeto de valor. Detalhes: %s", transferUUIDCombine, err.Error())
+				tx.Rollback()
+				return aggregate.Wallet{}, err
+			}
+
+			wallet.SetTransfers(*transfer)
+		}
+	}
+
+	err = tx.Commit().Error
+	if err != nil {
+		tx.Rollback()
 		return aggregate.Wallet{}, err
 	}
 
