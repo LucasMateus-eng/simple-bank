@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"github.com/LucasMateus-eng/simple-bank/adapters/primary/api/rest/router"
 	"github.com/LucasMateus-eng/simple-bank/adapters/primary/api/rest/wallet"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -26,6 +27,12 @@ func SetupEchoRouter(handler *wallet.WalletHandler) *echo.Echo {
 	e.Use(middleware.Logger())
 
 	v1 := e.Group("/api/v1")
+	{
+		utilsGroup := v1.Group("/health")
+		{
+			utilsGroup.GET("", router.Health)
+		}
+	}
 	{
 		docs := v1.Group("/docs")
 		{
