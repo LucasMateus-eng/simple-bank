@@ -88,6 +88,12 @@ definitions:
       status:
         type: string
     type: object
+  router.AppStatus:
+    properties:
+      status:
+        example: UP
+        type: string
+    type: object
   valueobject.TransferAPI:
     properties:
       amount:
@@ -111,6 +117,19 @@ info:
   title: Simple-bank API
   version: "1.0"
 paths:
+  /health:
+    get:
+      description: Get API availability - if it's running
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API is available.
+          schema:
+            $ref: '#/definitions/router.AppStatus'
+      summary: Get API availability
+      tags:
+      - health
   /wallet:
     post:
       consumes:

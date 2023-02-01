@@ -16,6 +16,26 @@
     "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
+        "/health": {
+            "get": {
+                "description": "Get API availability - if it's running",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Get API availability",
+                "responses": {
+                    "200": {
+                        "description": "API is available.",
+                        "schema": {
+                            "$ref": "#/definitions/router.AppStatus"
+                        }
+                    }
+                }
+            }
+        },
         "/wallet": {
             "put": {
                 "description": "Update a wallet in the database",
@@ -372,6 +392,15 @@
                 },
                 "status": {
                     "type": "string"
+                }
+            }
+        },
+        "router.AppStatus": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "example": "UP"
                 }
             }
         },

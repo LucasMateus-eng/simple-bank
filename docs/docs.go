@@ -22,6 +22,26 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/health": {
+            "get": {
+                "description": "Get API availability - if it's running",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Get API availability",
+                "responses": {
+                    "200": {
+                        "description": "API is available.",
+                        "schema": {
+                            "$ref": "#/definitions/router.AppStatus"
+                        }
+                    }
+                }
+            }
+        },
         "/wallet": {
             "put": {
                 "description": "Update a wallet in the database",
@@ -378,6 +398,15 @@ const docTemplate = `{
                 },
                 "status": {
                     "type": "string"
+                }
+            }
+        },
+        "router.AppStatus": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "example": "UP"
                 }
             }
         },
