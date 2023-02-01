@@ -23,10 +23,10 @@ CREATE TABLE "entries" (
 
 CREATE TABLE "transfers" (
   "id" bigserial PRIMARY KEY,
-  "from_account_uuid" text NOT NULL,
-  "to_account_uuid" text NOT NULL,
+  "from_wallet_uuid" text NOT NULL,
+  "to_wallet_uuid" text NOT NULL,
   "amount" decimal NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now()),
-  CONSTRAINT fk_from_account FOREIGN KEY("from_account_uuid") REFERENCES wallets("uuid") ON DELETE CASCADE,
-  CONSTRAINT fk_to_account FOREIGN KEY("to_account_uuid") REFERENCES wallets("uuid") ON DELETE CASCADE
+  CONSTRAINT fk_from_wallet FOREIGN KEY("from_wallet_uuid") REFERENCES wallets("uuid") ON DELETE CASCADE,
+  CONSTRAINT fk_to_wallet FOREIGN KEY("to_wallet_uuid") REFERENCES wallets("uuid") ON DELETE CASCADE
 );
