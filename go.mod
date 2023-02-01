@@ -8,6 +8,7 @@ require (
 	github.com/labstack/echo/v4 v4.10.0
 	github.com/sirupsen/logrus v1.9.0
 	github.com/swaggo/echo-swagger v1.3.5
+	github.com/swaggo/swag v1.8.1
 	gorm.io/driver/postgres v1.4.6
 	gorm.io/gorm v1.24.3
 )
@@ -32,7 +33,6 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a // indirect
-	github.com/swaggo/swag v1.8.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	golang.org/x/crypto v0.4.0 // indirect
