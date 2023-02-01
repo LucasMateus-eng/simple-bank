@@ -4,14 +4,34 @@ import (
 	"github.com/LucasMateus-eng/simple-bank/adapters/primary/api/rest/wallet"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
+	echoswagger "github.com/swaggo/echo-swagger"
 )
 
+// @title Simple-bank API
+// @version 1.0
+// @description This is a simple-bank management application.
+
+// @contact.name API Supports
+// @contact.email lucas.falecomigo@gmail.com
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:8080
+// @BasePath /api/v1
 func SetupEchoRouter(handler *wallet.WalletHandler) *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.Recover())
 	e.Use(middleware.Logger())
 
 	v1 := e.Group("/api/v1")
+	{
+		docs := v1.Group("/docs")
+		{
+			docs.GET("/swagger/*", echoswagger.WrapHandler)
+		}
+	}
 	{
 		wallet := v1.Group("/wallet")
 		{

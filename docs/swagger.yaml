@@ -1,0 +1,230 @@
+basePath: /api/v1
+definitions:
+  aggregate.WalletAPI:
+    properties:
+      account:
+        $ref: '#/definitions/entity.AccountAPI'
+      entries:
+        items:
+          $ref: '#/definitions/entity.EntryAPI'
+        type: array
+      person:
+        $ref: '#/definitions/entity.PersonAPI'
+      transfers:
+        items:
+          $ref: '#/definitions/valueobject.TransferAPI'
+        type: array
+    type: object
+  aggregate.WalletForUpdateAPI:
+    properties:
+      account:
+        $ref: '#/definitions/entity.AccountAPI'
+      entries:
+        items:
+          $ref: '#/definitions/entity.EntryAPI'
+        type: array
+      person:
+        $ref: '#/definitions/entity.PersonAPI'
+      transfers:
+        items:
+          $ref: '#/definitions/valueobject.TransferAPI'
+        type: array
+    type: object
+  entity.AccountAPI:
+    properties:
+      balance:
+        type: number
+      created_at:
+        type: string
+      owner:
+        type: string
+    type: object
+  entity.EntryAPI:
+    properties:
+      account_uuid:
+        type: string
+      amount:
+        type: number
+      created_at:
+        type: string
+      uuid:
+        type: string
+    type: object
+  entity.PersonAPI:
+    properties:
+      email:
+        type: string
+      is_a_shopkeeper:
+        type: boolean
+      name:
+        type: string
+      password:
+        type: string
+      personal_id:
+        type: string
+      uuid:
+        type: string
+    type: object
+  formatter.Response:
+    properties:
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  formatter.ResponseErrorWithData:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  formatter.ResponseOKWithData:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  valueobject.TransferAPI:
+    properties:
+      amount:
+        type: number
+      created_at:
+        type: string
+      from_wallet_uuid:
+        type: string
+      to_wallet_uuid:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: lucas.falecomigo@gmail.com
+    name: API Supports
+  description: This is a simple-bank management application.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Simple-bank API
+  version: "1.0"
+paths:
+  /wallet:
+    post:
+      consumes:
+      - application/json
+      description: Create a new wallet in the database
+      parameters:
+      - description: Wallet DTO for create
+        in: body
+        name: wallet
+        required: true
+        schema:
+          $ref: '#/definitions/aggregate.WalletAPI'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Wallet successfully created.
+          schema:
+            $ref: '#/definitions/formatter.ResponseOKWithData'
+        "400":
+          description: Invalid payload.
+          schema:
+            $ref: '#/definitions/formatter.ResponseErrorWithData'
+        "500":
+          description: Failed to create wallet.
+          schema:
+            $ref: '#/definitions/formatter.ResponseErrorWithData'
+      summary: Create a wallet
+      tags:
+      - wallet
+    put:
+      consumes:
+      - application/json
+      description: Update a wallet in the database
+      parameters:
+      - description: Wallet DTO for update
+        in: body
+        name: wallet
+        required: true
+        schema:
+          $ref: '#/definitions/aggregate.WalletForUpdateAPI'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Wallet successfully updated.
+          schema:
+            $ref: '#/definitions/formatter.ResponseOKWithData'
+        "400":
+          description: Invalid payload.
+          schema:
+            $ref: '#/definitions/formatter.ResponseErrorWithData'
+        "500":
+          description: Failed to update wallet.
+          schema:
+            $ref: '#/definitions/formatter.ResponseErrorWithData'
+      summary: Update a wallet
+      tags:
+      - wallet
+  /wallet/{wallet_id}:
+    delete:
+      description: Delete a wallet based on the wallet id from the database
+      parameters:
+      - description: wallet identifier
+        in: path
+        name: wallet_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Wallet successfully deleted.
+          schema:
+            $ref: '#/definitions/formatter.Response'
+        "400":
+          description: Error parsing the id parameter.
+          schema:
+            $ref: '#/definitions/formatter.ResponseErrorWithData'
+        "500":
+          description: Failed to delete wallet.
+          schema:
+            $ref: '#/definitions/formatter.ResponseErrorWithData'
+      summary: Delete a wallet
+      tags:
+      - wallet
+    get:
+      description: Get a wallet based on the wallet id from the database
+      parameters:
+      - description: wallet identifier
+        in: path
+        name: wallet_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful get wallet.
+          schema:
+            $ref: '#/definitions/formatter.ResponseOKWithData'
+        "400":
+          description: Error parsing the id parameter.
+          schema:
+            $ref: '#/definitions/formatter.ResponseErrorWithData'
+        "404":
+          description: 'Error: wallet can''t find.'
+          schema:
+            $ref: '#/definitions/formatter.ResponseErrorWithData'
+        "500":
+          description: Error getting wallet.
+          schema:
+            $ref: '#/definitions/formatter.ResponseErrorWithData'
+      summary: Get a wallet
+      tags:
+      - wallet
+swagger: "2.0"
