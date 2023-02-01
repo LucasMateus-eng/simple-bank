@@ -43,6 +43,12 @@ func (ws *walletService) Get(id uuid.UUID) (aggregate.Wallet, error) {
 }
 
 func (ws *walletService) Add(wallet aggregate.Wallet) error {
+	if wallet.IsEmpty() {
+		err := errors.New("dados da carteira não informados")
+		log.Error("Erro ao salvar uma carteira no walletService: ", err.Error())
+		return err
+	}
+
 	err := ws.walletRepo.Add(wallet)
 	if err != nil {
 		log.Error("Erro ao salvar uma carteira no walletService: ", err.Error())
@@ -53,9 +59,15 @@ func (ws *walletService) Add(wallet aggregate.Wallet) error {
 }
 
 func (ws *walletService) Update(wallet aggregate.Wallet) error {
+	if wallet.IsEmpty() {
+		err := errors.New("dados da carteira não informados")
+		log.Errorf("Erro ao atualizar a carteira %s no walletService: ", wallet.GetID(), err.Error())
+		return err
+	}
+
 	err := ws.walletRepo.Update(wallet)
 	if err != nil {
-		log.Error("Erro ao atualizar uma carteira no walletService: ", err.Error())
+		log.Errorf("Erro ao atualizar a carteira %s no walletService: ", wallet.GetID(), err.Error())
 		return err
 	}
 
@@ -65,7 +77,7 @@ func (ws *walletService) Update(wallet aggregate.Wallet) error {
 func (ws *walletService) Delete(id uuid.UUID) error {
 	err := ws.walletRepo.Delete(id)
 	if err != nil {
-		log.Error("Erro ao deletar uma carteira no walletService: ", err.Error())
+		log.Errorf("Erro ao deletar a carteira %s no walletService: ", id, err.Error())
 		return err
 	}
 
