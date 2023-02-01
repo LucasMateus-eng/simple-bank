@@ -227,4 +227,34 @@ paths:
       summary: Get a wallet
       tags:
       - wallet
+  /wallet/transfer:
+    put:
+      consumes:
+      - application/json
+      description: Transfer money between two wallets in the database (transaction)
+      parameters:
+      - description: Wallet DTO for transfer
+        in: body
+        name: wallet
+        required: true
+        schema:
+          $ref: '#/definitions/valueobject.TransferAPI'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Transfer performed successfully.
+          schema:
+            $ref: '#/definitions/formatter.ResponseOKWithData'
+        "400":
+          description: Invalid payload.
+          schema:
+            $ref: '#/definitions/formatter.ResponseErrorWithData'
+        "500":
+          description: Failed to perform transfer.
+          schema:
+            $ref: '#/definitions/formatter.ResponseErrorWithData'
+      summary: Transfer money
+      tags:
+      - wallet
 swagger: "2.0"

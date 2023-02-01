@@ -162,6 +162,18 @@ func (wh *WalletHandler) Delete(c echo.Context) error {
 	return formatter.SuccessJSON(c, http.StatusNoContent, "Carteira excluída com sucesso")
 }
 
+// Transfer handler for money transfer between two wallets
+//
+// @Summary Transfer money
+// @Description Transfer money between two wallets in the database (transaction)
+// @Tags wallet
+// @Accept json
+// @Produce json
+// @Param wallet body apivalueobject.TransferAPI true "Wallet DTO for transfer"
+// @Success 204 {object} formatter.ResponseOKWithData "Transfer performed successfully."
+// @Failure 400 {object} formatter.ResponseErrorWithData "Invalid payload."
+// @Failure 500 {object} formatter.ResponseErrorWithData "Failed to perform transfer."
+// @Router /wallet/transfer [put]
 func (wh *WalletHandler) Transfer(c echo.Context) error {
 	var body = new(apivalueobject.TransferAPI)
 	if err := c.Bind(&body); err != nil {

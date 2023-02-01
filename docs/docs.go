@@ -112,6 +112,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/wallet/transfer": {
+            "put": {
+                "description": "Transfer money between two wallets in the database (transaction)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "wallet"
+                ],
+                "summary": "Transfer money",
+                "parameters": [
+                    {
+                        "description": "Wallet DTO for transfer",
+                        "name": "wallet",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/valueobject.TransferAPI"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Transfer performed successfully.",
+                        "schema": {
+                            "$ref": "#/definitions/formatter.ResponseOKWithData"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid payload.",
+                        "schema": {
+                            "$ref": "#/definitions/formatter.ResponseErrorWithData"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to perform transfer.",
+                        "schema": {
+                            "$ref": "#/definitions/formatter.ResponseErrorWithData"
+                        }
+                    }
+                }
+            }
+        },
         "/wallet/{wallet_id}": {
             "get": {
                 "description": "Get a wallet based on the wallet id from the database",
