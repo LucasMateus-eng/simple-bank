@@ -130,7 +130,7 @@ func (wh *WalletHandler) Update(c echo.Context) error {
 		return formatter.ErrorWithDataJSON(c, http.StatusInternalServerError, "Erro ao atualizar carteira", err.Error())
 	}
 
-	return formatter.SuccessJSON(c, http.StatusOK, "Carteira atualizada com sucesso")
+	return formatter.SuccessJSON(c, http.StatusNoContent, "Carteira atualizada com sucesso")
 }
 
 // Delete handler for wallet deletion based on wallet id
