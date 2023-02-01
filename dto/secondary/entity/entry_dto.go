@@ -5,16 +5,17 @@ import (
 	"time"
 
 	"github.com/LucasMateus-eng/simple-bank/application/entity"
+	gormaggregate "github.com/LucasMateus-eng/simple-bank/dto/secondary/aggregate"
 	"github.com/google/uuid"
 )
 
 type EntryGorm struct {
-	ID          uint         `gorm:"primaryKey;column:id"`
-	UUID        string       `gorm:"uniqueIndex;column:uuid"`
-	AccountUUID string       `gorm:"not null;column:account_uuid"`
-	Account     *AccountGorm `gorm:"foreignKey:account_uuid;references:UUID;constraint:OnDelete:CASCADE"`
-	Amount      float64      `gorm:"not null;column:amount"`
-	CreatedAt   time.Time    `gorm:"not null;column:created_at"`
+	ID        uint                      `gorm:"primaryKey;column:id"`
+	UUID      string                    `gorm:"uniqueIndex;column:uuid"`
+	Owner     string                    `gorm:"not null;column:account_uuid"`
+	Wallet    *gormaggregate.WalletGorm `gorm:"foreignKey:account_uuid;references:UUID;constraint:OnDelete:CASCADE"`
+	Amount    float64                   `gorm:"not null;column:amount"`
+	CreatedAt time.Time                 `gorm:"not null;column:created_at"`
 }
 
 func (eg *EntryGorm) TableName() string {
@@ -31,16 +32,16 @@ func (eg *EntryGorm) ToEntity() (*entity.Entry, error) {
 		return nil, err
 	}
 
-	parsedAccount, err := uuid.Parse(eg.AccountUUID)
+	parsedOwner, err := uuid.Parse(eg.Owner)
 	if err != nil {
 		return nil, err
 	}
 
 	return &entity.Entry{
-		UUID:        parsed,
-		AccountUUID: parsedAccount,
-		Amount:      eg.Amount,
-		CreatedAt:   eg.CreatedAt,
+		UUID:      parsed,
+		Owner:     parsedOwner,
+		Amount:    eg.Amount,
+		CreatedAt: eg.CreatedAt,
 	}, nil
 }
 
@@ -50,7 +51,7 @@ func (eg *EntryGorm) FromEntity(entry entity.Entry) {
 	}
 
 	eg.UUID = entry.UUID.String()
-	eg.AccountUUID = entry.AccountUUID.String()
+	eg.Owner = entry.Owner.String()
 	eg.Amount = entry.Amount
 	eg.CreatedAt = entry.CreatedAt
 }

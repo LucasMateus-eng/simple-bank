@@ -5,18 +5,18 @@ import (
 	"time"
 
 	valueobject "github.com/LucasMateus-eng/simple-bank/application/value_object"
-	gormentity "github.com/LucasMateus-eng/simple-bank/dto/secondary/entity"
+	gormaggregate "github.com/LucasMateus-eng/simple-bank/dto/secondary/aggregate"
 	"github.com/google/uuid"
 )
 
 type TransferGorm struct {
-	ID              uint                    `gorm:"primaryKey;column:id"`
-	FromAccountUUID string                  `gorm:"not null;column:from_account_uuid"`
-	FromAccount     *gormentity.AccountGorm `gorm:"foreignKey:from_account_uuid;references:UUID;constraint:OnDelete:CASCADE"`
-	ToAccountUUID   string                  `gorm:"not null;column:to_account_uuid"`
-	ToAccount       *gormentity.AccountGorm `gorm:"foreignKey:to_account_uuid;references:UUID;constraint:OnDelete:CASCADE"`
-	Amount          float64                 `gorm:"not null;column:amount"`
-	CreatedAt       time.Time               `gorm:"not null;column:created_at"`
+	ID             uint                      `gorm:"primaryKey;column:id"`
+	FromWalletUUID string                    `gorm:"not null;column:from_account_uuid"`
+	FromWallet     *gormaggregate.WalletGorm `gorm:"foreignKey:from_account_uuid;references:UUID;constraint:OnDelete:CASCADE"`
+	ToWalletUUID   string                    `gorm:"not null;column:to_account_uuid"`
+	ToWallet       *gormaggregate.WalletGorm `gorm:"foreignKey:to_account_uuid;references:UUID;constraint:OnDelete:CASCADE"`
+	Amount         float64                   `gorm:"not null;column:amount"`
+	CreatedAt      time.Time                 `gorm:"not null;column:created_at"`
 }
 
 func (tg *TransferGorm) TableName() string {
@@ -28,21 +28,21 @@ func (tg *TransferGorm) ToValueObject() (*valueobject.Transfer, error) {
 		return nil, errors.New("o dto do objeto de valor Transfer não pode ser vazio")
 	}
 
-	parsedFromAccount, err := uuid.Parse(tg.FromAccountUUID)
+	parsedFromWallet, err := uuid.Parse(tg.FromWalletUUID)
 	if err != nil {
 		return nil, err
 	}
 
-	parsedToAccount, err := uuid.Parse(tg.ToAccountUUID)
+	parsedToWallet, err := uuid.Parse(tg.ToWalletUUID)
 	if err != nil {
 		return nil, err
 	}
 
 	return &valueobject.Transfer{
-		FromAccountUUID: parsedFromAccount,
-		ToAccountUUID:   parsedToAccount,
-		Amount:          tg.Amount,
-		CreatedAt:       tg.CreatedAt,
+		FromWalletUUID: parsedFromWallet,
+		ToWalletUUID:   parsedToWallet,
+		Amount:         tg.Amount,
+		CreatedAt:      tg.CreatedAt,
 	}, nil
 }
 
@@ -51,8 +51,8 @@ func (tg *TransferGorm) FromValueObject(transfer valueobject.Transfer) {
 		tg = &TransferGorm{}
 	}
 
-	tg.FromAccountUUID = transfer.FromAccountUUID.String()
-	tg.ToAccountUUID = transfer.ToAccountUUID.String()
+	tg.FromWalletUUID = transfer.FromWalletUUID.String()
+	tg.ToWalletUUID = transfer.ToWalletUUID.String()
 	tg.Amount = transfer.Amount
 	tg.CreatedAt = transfer.CreatedAt
 }
