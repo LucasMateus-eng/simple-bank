@@ -12,8 +12,8 @@ import (
 type EntryGorm struct {
 	ID        uint                      `gorm:"primaryKey;column:id"`
 	UUID      string                    `gorm:"uniqueIndex;column:uuid"`
-	Owner     string                    `gorm:"not null;column:account_uuid"`
-	Wallet    *gormaggregate.WalletGorm `gorm:"foreignKey:account_uuid;references:UUID;constraint:OnDelete:CASCADE"`
+	Owner     string                    `gorm:"not null;column:wallet_uuid"`
+	Wallet    *gormaggregate.WalletGorm `gorm:"foreignKey:wallet_uuid;references:UUID;constraint:OnDelete:CASCADE"`
 	Amount    float64                   `gorm:"not null;column:amount"`
 	CreatedAt time.Time                 `gorm:"not null;column:created_at"`
 }

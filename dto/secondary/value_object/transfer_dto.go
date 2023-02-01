@@ -11,10 +11,10 @@ import (
 
 type TransferGorm struct {
 	ID             uint                      `gorm:"primaryKey;column:id"`
-	FromWalletUUID string                    `gorm:"not null;column:from_account_uuid"`
-	FromWallet     *gormaggregate.WalletGorm `gorm:"foreignKey:from_account_uuid;references:UUID;constraint:OnDelete:CASCADE"`
-	ToWalletUUID   string                    `gorm:"not null;column:to_account_uuid"`
-	ToWallet       *gormaggregate.WalletGorm `gorm:"foreignKey:to_account_uuid;references:UUID;constraint:OnDelete:CASCADE"`
+	FromWalletUUID string                    `gorm:"not null;column:from_wallet_uuid"`
+	FromWallet     *gormaggregate.WalletGorm `gorm:"foreignKey:from_wallet_uuid;references:UUID;constraint:OnDelete:CASCADE"`
+	ToWalletUUID   string                    `gorm:"not null;column:to_wallet_uuid"`
+	ToWallet       *gormaggregate.WalletGorm `gorm:"foreignKey:to_wallet_uuid;references:UUID;constraint:OnDelete:CASCADE"`
 	Amount         float64                   `gorm:"not null;column:amount"`
 	CreatedAt      time.Time                 `gorm:"not null;column:created_at"`
 }
