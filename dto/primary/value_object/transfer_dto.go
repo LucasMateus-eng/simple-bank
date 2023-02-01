@@ -1,6 +1,7 @@
 package valueobject
 
 import (
+	"errors"
 	"time"
 
 	valueobject "github.com/LucasMateus-eng/simple-bank/application/value_object"
@@ -16,7 +17,7 @@ type TransferAPI struct {
 
 func (ta *TransferAPI) ToValueObject() (*valueobject.Transfer, error) {
 	if ta == nil {
-		ta = &TransferAPI{}
+		return nil, errors.New("o dto do objeto de valor Transfer não pode ser vazio")
 	}
 
 	parseFromWallet, err := uuid.Parse(ta.FromWalletUUID)

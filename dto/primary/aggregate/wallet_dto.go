@@ -1,6 +1,8 @@
 package aggregate
 
 import (
+	"errors"
+
 	"github.com/LucasMateus-eng/simple-bank/application/aggregate"
 	"github.com/LucasMateus-eng/simple-bank/application/entity"
 	valueobject "github.com/LucasMateus-eng/simple-bank/application/value_object"
@@ -17,7 +19,7 @@ type WalletAPI struct {
 
 func (wa *WalletAPI) ToAggregate() (*aggregate.Wallet, error) {
 	if wa == nil {
-		wa = &WalletAPI{}
+		return nil, errors.New("o dto do agregado Wallet não pode ser vazio")
 	}
 
 	person, err := wa.Person.ToEntity()
@@ -119,7 +121,7 @@ type WalletForUpdateAPI struct {
 
 func (wua *WalletForUpdateAPI) ToAggregate() (*aggregate.Wallet, error) {
 	if wua == nil {
-		wua = &WalletForUpdateAPI{}
+		return nil, errors.New("o dto do agregado Wallet não pode ser vazio")
 	}
 
 	person, err := wua.Person.ToEntity()

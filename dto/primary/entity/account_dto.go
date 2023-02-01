@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"errors"
 	"time"
 
 	"github.com/LucasMateus-eng/simple-bank/application/entity"
@@ -15,7 +16,7 @@ type AccountAPI struct {
 
 func (ap *AccountAPI) ToEntity() (*entity.Account, error) {
 	if ap == nil {
-		ap = &AccountAPI{}
+		return nil, errors.New("o dto da antidade Account não pode ser vazio")
 	}
 
 	parseOwner, err := uuid.Parse(ap.Owner)

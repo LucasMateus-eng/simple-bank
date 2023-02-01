@@ -1,6 +1,8 @@
 package entity
 
 import (
+	"errors"
+
 	"github.com/LucasMateus-eng/simple-bank/application/entity"
 	"github.com/google/uuid"
 )
@@ -16,7 +18,7 @@ type PersonAPI struct {
 
 func (pa *PersonAPI) ToEntity() (*entity.Person, error) {
 	if pa == nil {
-		pa = &PersonAPI{}
+		return nil, errors.New("o dto da entidade Person não pode ser vazio")
 	}
 
 	parse, err := uuid.Parse(pa.UUID)
