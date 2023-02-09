@@ -102,6 +102,10 @@ PG_HOST=localhost
   }
 ```
 
+- Para as operações que envolvem alguma data de criação deve-se passar a string no formato:
+
+RFC3339 = "2006-01-02T15:04:05Z07:00"
+
 5. Cuidado
 
 - Se você estiver recebendo algum erro relacionado a conexão pode ser o seu anti-vírus proibindo o acesso a alguns recursos do seu sistema. Minha recomendação: desligue o seu anti-vírus enquanto você executa os endpoints.
