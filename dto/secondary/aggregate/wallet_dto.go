@@ -6,20 +6,21 @@ import (
 	"time"
 
 	"github.com/LucasMateus-eng/simple-bank/application/aggregate"
+	"github.com/lib/pq"
 )
 
 type WalletGorm struct {
-	ID                     uint      `gorm:"primaryKey;column:id"`
-	UUID                   string    `gorm:"uniqueIndex;column:uuid"`
-	Name                   string    `gorm:"not null;column:name"`
-	PersonalIdentification string    `gorm:"uniqueIndex;column:personal_id"`
-	Email                  string    `gorm:"uniqueIndex;column:email"`
-	Password               string    `gorm:"not null;column:password"`
-	IsAShopkeeper          bool      `gorm:"not null;column:is_a_shopkeeper"`
-	Balance                float64   `gorm:"not null;column:balance"`
-	CreatedAt              time.Time `gorm:"not null;column:created_at"`
-	Entries                []string  `gorm:"column:entries"`
-	Transfers              []string  `gorm:"column:transfers"`
+	ID                     uint           `gorm:"primaryKey;column:id"`
+	UUID                   string         `gorm:"uniqueIndex;column:uuid"`
+	Name                   string         `gorm:"not null;column:name"`
+	PersonalIdentification string         `gorm:"uniqueIndex;column:personal_id"`
+	Email                  string         `gorm:"uniqueIndex;column:email"`
+	Password               string         `gorm:"not null;column:password"`
+	IsAShopkeeper          bool           `gorm:"not null;column:is_a_shopkeeper"`
+	Balance                float64        `gorm:"not null;column:balance"`
+	CreatedAt              time.Time      `gorm:"not null;column:created_at"`
+	Entries                pq.StringArray `gorm:"type:text[];column:entries"`
+	Transfers              pq.StringArray `gorm:"type:text[];column:transfers"`
 }
 
 func (wg *WalletGorm) TableName() string {
