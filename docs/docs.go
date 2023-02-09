@@ -132,6 +132,52 @@ const docTemplate = `{
                 }
             }
         },
+        "/wallet/deposit": {
+            "put": {
+                "description": "deposit money to the user's account in the database (transaction)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "wallet"
+                ],
+                "summary": "deposit money",
+                "parameters": [
+                    {
+                        "description": "Wallet DTO for deposit",
+                        "name": "wallet",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/valueobject.TransferAPI"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deposit performed successfully.",
+                        "schema": {
+                            "$ref": "#/definitions/formatter.ResponseOKWithData"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid payload.",
+                        "schema": {
+                            "$ref": "#/definitions/formatter.ResponseErrorWithData"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to perform deposit.",
+                        "schema": {
+                            "$ref": "#/definitions/formatter.ResponseErrorWithData"
+                        }
+                    }
+                }
+            }
+        },
         "/wallet/transfer": {
             "put": {
                 "description": "Transfer money between two wallets in the database (transaction)",
