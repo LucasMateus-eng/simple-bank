@@ -61,17 +61,17 @@ func (wa *WalletAPI) FromAggregate(wallet aggregate.Wallet) {
 	}
 
 	entries := make([]apientity.EntryAPI, len(wallet.GetEntries()))
-	for _, et := range wallet.GetEntries() {
+	for i, et := range wallet.GetEntries() {
 		var eta apientity.EntryAPI
 		eta.FromEntity(*et)
-		entries = append(entries, eta)
+		entries[i] = eta
 	}
 
 	transfers := make([]apivalueobject.TransferAPI, len(wallet.GetTransfers()))
-	for _, tr := range wallet.GetTransfers() {
+	for i, tr := range wallet.GetTransfers() {
 		var tra apivalueobject.TransferAPI
 		tra.FromValueObject(tr)
-		transfers = append(transfers, tra)
+		transfers[i] = tra
 	}
 
 	wa.Person = person
