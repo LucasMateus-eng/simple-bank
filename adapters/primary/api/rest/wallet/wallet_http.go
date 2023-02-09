@@ -203,7 +203,7 @@ func (wh *WalletHandler) Transfer(c echo.Context) error {
 // @Tags wallet
 // @Accept json
 // @Produce json
-// @Param wallet body apivalueobject.depositAPI true "Wallet DTO for deposit"
+// @Param wallet body apivalueobject.TransferAPI true "Wallet DTO for deposit"
 // @Success 204 {object} formatter.ResponseOKWithData "Deposit performed successfully."
 // @Failure 400 {object} formatter.ResponseErrorWithData "Invalid payload."
 // @Failure 500 {object} formatter.ResponseErrorWithData "Failed to perform deposit."
