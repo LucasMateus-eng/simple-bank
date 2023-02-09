@@ -86,6 +86,13 @@ func (w *Wallet) GetPerson() entity.Person {
 	return *w.person
 }
 
+func (w *Wallet) SetPerson(person *entity.Person) {
+	if w.account.IsEmpty() || person.IsEmpty() {
+		w.person = &entity.Person{}
+	}
+	w.person = person
+}
+
 func (w *Wallet) GetAccount() *entity.Account {
 	return w.account
 }
