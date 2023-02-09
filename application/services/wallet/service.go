@@ -3,6 +3,7 @@ package wallet
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/LucasMateus-eng/simple-bank/application/aggregate"
 	primaryport "github.com/LucasMateus-eng/simple-bank/application/ports/primary/wallet"
@@ -115,6 +116,28 @@ func (ws *walletService) Transfer(transfer valueobject.Transfer) error {
 	err = ws.walletRepo.Transfer(transfer)
 	if err != nil {
 		log.Error("Erro ao realizar uma transferência no walletService: ", err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func (ws *walletService) Deposit(deposit valueobject.Transfer) error {
+	if deposit.Amount <= 0 {
+		err := errors.New("o valor depositado deve ser positivo e diferente de zero")
+		log.Error("Erro ao realizar um depósito no walletService: ", err.Error())
+		return err
+	}
+
+	if strings.Compare(deposit.FromWalletUUID.String(), deposit.ToWalletUUID.String()) != 0 {
+		err := fmt.Errorf("o titular %s da carteira que está realizando o depósito deve ser o mesmo titular da que está recebendo", deposit.FromWalletUUID.String())
+		log.Error("Erro ao realizar um depósito no walletService: ", err.Error())
+		return err
+	}
+
+	err := ws.walletRepo.Deposit(deposit)
+	if err != nil {
+		log.Error("Erro ao realizar um depósito no walletService: ", err.Error())
 		return err
 	}
 
