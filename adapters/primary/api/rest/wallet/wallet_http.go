@@ -60,7 +60,7 @@ func (wh *WalletHandler) Get(c echo.Context) error {
 		return formatter.ErrorWithDataJSON(c, http.StatusNotFound, "Erro ao consultar carteira", err.Error())
 	}
 
-	var wallet *apiaggregate.WalletAPI
+	wallet := &apiaggregate.WalletAPI{}
 	wallet.FromAggregate(result)
 
 	return formatter.SuccessWithDataJSON(c, http.StatusOK, "Sucesso ao consultar carteira", wallet)
