@@ -22,42 +22,10 @@ func (wa *WalletAPI) ToAggregate() (*aggregate.Wallet, error) {
 		return nil, errors.New("o dto do agregado Wallet não pode ser vazio")
 	}
 
-	person, err := wa.Person.ToEntity()
+	wallet, err := aggregate.NewWallet(wa.Person.Name, wa.Person.PersonalIdentification, wa.Person.Email, wa.Person.Password, wa.Person.IsAShopkeeper)
 	if err != nil {
 		return nil, err
 	}
-
-	account, err := wa.Account.ToEntity()
-	if err != nil {
-		return nil, err
-	}
-
-	wallet, err := aggregate.NewWallet(person.Name, person.PersonalIdentification, person.Email, person.Password, person.IsAShopkeeper)
-	if err != nil {
-		return nil, err
-	}
-
-	entries := make([]*entity.Entry, len(wa.Entries))
-	for _, eta := range wa.Entries {
-		et, err := eta.ToEntity()
-		if err != nil {
-			return nil, err
-		}
-		entries = append(entries, et)
-	}
-
-	transfers := make([]valueobject.Transfer, len(wa.Transfers))
-	for _, tra := range wa.Transfers {
-		tr, err := tra.ToValueObject()
-		if err != nil {
-			return nil, err
-		}
-		transfers = append(transfers, *tr)
-	}
-
-	wallet.SetAccount(account)
-	wallet.SetEntries(entries...)
-	wallet.SetTransfers(transfers...)
 
 	return &wallet, nil
 }
