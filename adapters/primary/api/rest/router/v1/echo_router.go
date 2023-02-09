@@ -47,6 +47,7 @@ func SetupEchoRouter(handler *wallet.WalletHandler) *echo.Echo {
 			wallet.POST("", handler.Add)
 			wallet.PUT("", handler.Update)
 			wallet.PUT("/transfer", handler.Transfer)
+			wallet.PUT("/deposit", handler.Deposit)
 			wallet.DELETE(":wallet_id", handler.Delete)
 		}
 	}

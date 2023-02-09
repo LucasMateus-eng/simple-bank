@@ -195,3 +195,37 @@ func (wh *WalletHandler) Transfer(c echo.Context) error {
 
 	return formatter.SuccessJSON(c, http.StatusNoContent, "Transferência realizada com sucesso")
 }
+
+// Deposit handler to make a deposit to the user's account
+//
+// @Summary deposit money
+// @Description deposit money to the user's account in the database (transaction)
+// @Tags wallet
+// @Accept json
+// @Produce json
+// @Param wallet body apivalueobject.depositAPI true "Wallet DTO for deposit"
+// @Success 204 {object} formatter.ResponseOKWithData "Deposit performed successfully."
+// @Failure 400 {object} formatter.ResponseErrorWithData "Invalid payload."
+// @Failure 500 {object} formatter.ResponseErrorWithData "Failed to perform deposit."
+// @Router /wallet/deposit [put]
+func (wh *WalletHandler) Deposit(c echo.Context) error {
+	var body = new(apivalueobject.TransferAPI)
+	if err := c.Bind(&body); err != nil {
+		log.Error("Erro ao realizar depósito na API rest: ", err.Error())
+		return formatter.ErrorWithDataJSON(c, http.StatusBadRequest, "Payload inválido", err.Error())
+	}
+
+	deposit, err := body.ToValueObject()
+	if err != nil {
+		log.Error("Erro ao realizar depósito na API rest: ", err.Error())
+		return formatter.ErrorWithDataJSON(c, http.StatusInternalServerError, "Erro ao converter para objeto de valor", err.Error())
+	}
+
+	err = wh.walletService.Transfer(*deposit)
+	if err != nil {
+		log.Error("Erro ao realizar depósito na API rest: ", err.Error())
+		return formatter.ErrorWithDataJSON(c, http.StatusInternalServerError, "Erro ao realizar depósito", err.Error())
+	}
+
+	return formatter.SuccessJSON(c, http.StatusNoContent, "Depósito realizado com sucesso")
+}
