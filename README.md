@@ -73,7 +73,7 @@ PG_HOST=localhost
   go run main.go
   ```
 
-- Para executar o comando em 3.3 você irá precisar de ter o CLI Migrate em sua máquina (confome SO):
+- Para executar o comando em 3.3 você irá precisar do CLI Migrate em sua máquina (confome SO):
 
   Veja a documentação em: [https://github.com/golang-migrate/migrate/tree/master/cmd/migrate]
 
