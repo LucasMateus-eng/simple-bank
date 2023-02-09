@@ -14,6 +14,15 @@ type Transfer struct {
 	CreatedAt      time.Time
 }
 
+func NewTransfer(from, to uuid.UUID, amount float64) *Transfer {
+	return &Transfer{
+		FromWalletUUID: from,
+		ToWalletUUID:   to,
+		Amount:         amount,
+		CreatedAt:      time.Now(),
+	}
+}
+
 func (t *Transfer) IsEmpty() bool {
 	if t == nil {
 		return true

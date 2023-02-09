@@ -14,6 +14,15 @@ type Entry struct {
 	CreatedAt time.Time
 }
 
+func NewEntry(owner uuid.UUID, amount float64) *Entry {
+	return &Entry{
+		UUID:      uuid.New(),
+		Owner:     owner,
+		Amount:    amount,
+		CreatedAt: time.Now(),
+	}
+}
+
 func (e *Entry) IsEmpty() bool {
 	if e == nil {
 		return true

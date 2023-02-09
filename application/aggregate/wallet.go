@@ -3,7 +3,6 @@ package aggregate
 import (
 	"errors"
 	"reflect"
-	"time"
 
 	"github.com/LucasMateus-eng/simple-bank/application/entity"
 	valueobject "github.com/LucasMateus-eng/simple-bank/application/value_object"
@@ -47,21 +46,9 @@ func NewWallet(name, personalID, email, password string, isAShopKeeper bool) (Wa
 		return Wallet{}, errors.New("a senha do usuário não pode ser vazia")
 	}
 
-	personUUID := uuid.New()
-	person := &entity.Person{
-		UUID:                   personUUID,
-		Name:                   name,
-		PersonalIdentification: personalID,
-		Email:                  email,
-		Password:               password,
-		IsAShopkeeper:          isAShopKeeper,
-	}
+	person := entity.NewPerson(name, personalID, email, password, isAShopKeeper)
 
-	account := &entity.Account{
-		Owner:     personUUID,
-		Balance:   0,
-		CreatedAt: time.Now(),
-	}
+	account := entity.NewAccount(person.UUID, 0)
 
 	return Wallet{
 		person:    person,
