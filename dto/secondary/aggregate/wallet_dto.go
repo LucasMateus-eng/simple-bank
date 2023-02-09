@@ -6,6 +6,9 @@ import (
 	"time"
 
 	"github.com/LucasMateus-eng/simple-bank/application/aggregate"
+	"github.com/LucasMateus-eng/simple-bank/application/entity"
+	valueobject "github.com/LucasMateus-eng/simple-bank/application/value_object"
+	"github.com/google/uuid"
 	"github.com/lib/pq"
 )
 
@@ -32,12 +35,37 @@ func (wg *WalletGorm) ToAggregate() (*aggregate.Wallet, error) {
 		return nil, errors.New("o dto do agregado Wallet não pode ser vazio")
 	}
 
-	wallet, err := aggregate.NewWallet(wg.Name, wg.PersonalIdentification, wg.Email, wg.Password, wg.IsAShopkeeper)
+	parsed, err := uuid.Parse(wg.UUID)
 	if err != nil {
 		return nil, err
 	}
 
-	return &wallet, nil
+	person := entity.Person{
+		UUID:                   parsed,
+		Name:                   wg.Name,
+		PersonalIdentification: wg.PersonalIdentification,
+		Email:                  wg.Email,
+		Password:               wg.Password,
+		IsAShopkeeper:          wg.IsAShopkeeper,
+	}
+
+	account := entity.Account{
+		Owner:     parsed,
+		Balance:   wg.Balance,
+		CreatedAt: wg.CreatedAt,
+	}
+
+	entries := make([]*entity.Entry, len(wg.Entries))
+
+	transfers := make([]valueobject.Transfer, len(wg.Transfers))
+
+	wallet := &aggregate.Wallet{}
+	wallet.SetPerson(&person)
+	wallet.SetAccount(&account)
+	wallet.SetEntries(entries...)
+	wallet.SetTransfers(transfers...)
+
+	return wallet, nil
 }
 
 func NewRow(wallet aggregate.Wallet) WalletGorm {
