@@ -221,7 +221,7 @@ func (wh *WalletHandler) Deposit(c echo.Context) error {
 		return formatter.ErrorWithDataJSON(c, http.StatusInternalServerError, "Erro ao converter para objeto de valor", err.Error())
 	}
 
-	err = wh.walletService.Transfer(*deposit)
+	err = wh.walletService.Deposit(*deposit)
 	if err != nil {
 		log.Error("Erro ao realizar depósito na API rest: ", err.Error())
 		return formatter.ErrorWithDataJSON(c, http.StatusInternalServerError, "Erro ao realizar depósito", err.Error())
