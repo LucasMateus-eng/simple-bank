@@ -88,6 +88,20 @@ PG_HOST=localhost
 
 - Uma outra opção é testar via a página swagger da API, localizada em: [http://localhost:8080/api/v1/docs/swagger/index.html]
 
+- Os dtos para as operações no sistema estão disponíveis na documentação swagger.
+
+- Para a criação de uma Wallet é apenas necessário o envio do dto Person (sem o campo uuid):
+
+```bash
+  "person": {
+    "email": "string",
+    "is_a_shopkeeper": true,
+    "name": "string",
+    "password": "string",
+    "personal_id": "string",
+  }
+```
+
 5. Cuidado
 
 - Se você estiver recebendo algum erro relacionado a conexão pode ser o seu anti-vírus proibindo o acesso a alguns recursos do seu sistema. Minha recomendação: desligue o seu anti-vírus enquanto você executa os endpoints.
