@@ -239,3 +239,68 @@ func (wr *walletPostgreSQLRepo) Transfer(transfer valueobject.Transfer) error {
 
 	return nil
 }
+
+func (wr *walletPostgreSQLRepo) Deposit(deposit valueobject.Transfer) error {
+	tx := wr.db.Begin()
+	defer func() {
+		if wr := recover(); wr != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	walletUUID := deposit.FromWalletUUID.String()
+	wallet := &gormaggregate.WalletGorm{}
+	if err := tx.First(wallet, "uuid = ?", walletUUID).Error; err != nil {
+		log.Errorf("Erro ao obter carteira %s no repositório PostgreSQL. Detalhes: %s", walletUUID, err.Error())
+		tx.Rollback()
+		return err
+	}
+
+	createdAt := *parse.SetTime()
+
+	entryWallet := gormentity.EntryGorm{
+		UUID:      uuid.New().String(),
+		Owner:     walletUUID,
+		Amount:    deposit.Amount,
+		CreatedAt: createdAt,
+	}
+
+	wallet.Balance += deposit.Amount
+
+	wallet.Entries = append(wallet.Entries, entryWallet.UUID)
+
+	wallet.Transfers = append(wallet.Transfers, fmt.Sprintf("%s|%s", walletUUID, walletUUID))
+
+	if err := tx.Where("uuid = ?", walletUUID).Updates(wallet).Error; err != nil {
+		log.Errorf("Erro ao atualizar a carteira %s no repositório PostgreSQL. Detalhes: %s", walletUUID, err.Error())
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Create(&entryWallet).Error; err != nil {
+		log.Errorf("Erro ao criar entrada %s no repositório PostgreSQL. Detalhes: ", entryWallet.UUID, err.Error())
+		tx.Rollback()
+		return err
+	}
+
+	trg := &gormvalueobject.TransferGorm{}
+	trg.FromValueObject(deposit)
+
+	if err := tx.Create(trg).Error; err != nil {
+		log.Errorf("Erro ao criar transferência %s no repositório PostgreSQL. Detalhes: ", fmt.Sprintf("%s|%s", walletUUID, walletUUID), err.Error())
+		tx.Rollback()
+		return err
+	}
+
+	err := tx.Commit().Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return nil
+}
