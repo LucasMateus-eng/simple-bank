@@ -92,6 +92,12 @@ func (ws *walletService) Transfer(transfer valueobject.Transfer) error {
 		return err
 	}
 
+	if strings.Compare(transfer.FromWalletUUID.String(), transfer.ToWalletUUID.String()) == 0 {
+		err := fmt.Errorf("o titular %s da carteira que está realizando a transferência não pode ser o mesmo titular da que está recebendo", transfer.FromWalletUUID.String())
+		log.Error("Erro ao realizar uma transferência no walletService: ", err.Error())
+		return err
+	}
+
 	walletThatTransfers, err := ws.Get(transfer.FromWalletUUID)
 	if err != nil {
 		err := fmt.Errorf("não foi possível consultar os dados da carteira %s que está transferindo. Detalhes: %s", transfer.FromWalletUUID, err.Error())
