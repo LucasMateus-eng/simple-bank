@@ -80,7 +80,7 @@ PG_HOST=localhost
 - Se você for um usuário Windows poderá ter problemas na execução dos comandos Make. Se for o seu caso, ou se tiver tendo problemas para executar os comandos Make; independetemente do SO, recomendo executar, no seu terminal, os comandos existentes no arquivo Makefile para cada target dos passos acima (3.1, 3.2, 3.3).
 
 - OBS.: Se você possuir o PostgreSQL instalado em sua máquina poderá ocorrer falhas na conexão da aplicação com o banco.
-- Uma possícel solução é:
+- Uma possível solução é:
 
   1. coloque as configurações do banco existente em sua máquina nas variáveis de ambiente da aplicação (com a excessão do HOST);
 
@@ -90,7 +90,7 @@ PG_HOST=localhost
 
 5. Cuidado
 
-- Se você estiver recebendo algum erro relacionado a conexão pode ser o seu anti-vírus proibindo o acesso a alguns recursos do seu sistema. Minha recomendação: desligue o seu anti-vírus enquanto executa os endpoints.
+- Se você estiver recebendo algum erro relacionado a conexão pode ser o seu anti-vírus proibindo o acesso a alguns recursos do seu sistema. Minha recomendação: desligue o seu anti-vírus enquanto você executa os endpoints.
 
 ## :computer: Tecnologias utilizadas
 
