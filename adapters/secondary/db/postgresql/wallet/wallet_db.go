@@ -117,7 +117,7 @@ func (wr *walletPostgreSQLRepo) Get(id uuid.UUID) (aggregate.Wallet, error) {
 func (wr *walletPostgreSQLRepo) Add(wallet aggregate.Wallet) error {
 	wg := gormaggregate.NewRow(wallet)
 
-	if err := wr.db.Create(&wg).Error; err != nil {
+	if err := wr.db.Model(&gormaggregate.WalletGorm{}).Create(&wg).Error; err != nil {
 		log.Error("Erro ao criar carteira no repositório PostgreSQL: ", err.Error())
 		return err
 	}
