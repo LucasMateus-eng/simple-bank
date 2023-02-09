@@ -12,4 +12,5 @@ type WalletService interface {
 	Update(aggregate.Wallet) error
 	Delete(uuid.UUID) error
 	Transfer(valueobject.Transfer) error
+	Deposit(valueobject.Transfer) error
 }
