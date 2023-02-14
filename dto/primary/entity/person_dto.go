@@ -48,3 +48,25 @@ func (pa *PersonAPI) FromEntity(person entity.Person) {
 	pa.Password = person.Password
 	pa.IsAShopkeeper = person.IsAShopkeeper
 }
+
+type PersonAPIToCreate struct {
+	Name                   string `json:"name"`
+	PersonalIdentification string `json:"personal_id"`
+	Email                  string `json:"email"`
+	Password               string `json:"password"`
+	IsAShopkeeper          bool   `json:"is_a_shopkeeper"`
+}
+
+func (pac *PersonAPIToCreate) ToEntity() (*entity.Person, error) {
+	if pac == nil {
+		return nil, errors.New("o dto da entidade Person não pode ser vazio")
+	}
+
+	return &entity.Person{
+		Name:                   pac.Name,
+		PersonalIdentification: pac.PersonalIdentification,
+		Email:                  pac.Email,
+		Password:               pac.Password,
+		IsAShopkeeper:          pac.IsAShopkeeper,
+	}, nil
+}
