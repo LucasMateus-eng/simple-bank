@@ -1,55 +1,5 @@
 basePath: /api/v1
 definitions:
-  aggregate.WalletAPI:
-    properties:
-      account:
-        $ref: '#/definitions/entity.AccountAPI'
-      entries:
-        items:
-          $ref: '#/definitions/entity.EntryAPI'
-        type: array
-      person:
-        $ref: '#/definitions/entity.PersonAPI'
-      transfers:
-        items:
-          $ref: '#/definitions/valueobject.TransferAPI'
-        type: array
-    type: object
-  aggregate.WalletForUpdateAPI:
-    properties:
-      account:
-        $ref: '#/definitions/entity.AccountAPI'
-      entries:
-        items:
-          $ref: '#/definitions/entity.EntryAPI'
-        type: array
-      person:
-        $ref: '#/definitions/entity.PersonAPI'
-      transfers:
-        items:
-          $ref: '#/definitions/valueobject.TransferAPI'
-        type: array
-    type: object
-  entity.AccountAPI:
-    properties:
-      balance:
-        type: number
-      created_at:
-        type: string
-      owner:
-        type: string
-    type: object
-  entity.EntryAPI:
-    properties:
-      account_uuid:
-        type: string
-      amount:
-        type: number
-      created_at:
-        type: string
-      uuid:
-        type: string
-    type: object
   entity.PersonAPI:
     properties:
       email:
@@ -63,6 +13,19 @@ definitions:
       personal_id:
         type: string
       uuid:
+        type: string
+    type: object
+  entity.PersonAPIToCreate:
+    properties:
+      email:
+        type: string
+      is_a_shopkeeper:
+        type: boolean
+      name:
+        type: string
+      password:
+        type: string
+      personal_id:
         type: string
     type: object
   formatter.Response:
@@ -141,7 +104,7 @@ paths:
         name: wallet
         required: true
         schema:
-          $ref: '#/definitions/aggregate.WalletAPI'
+          $ref: '#/definitions/entity.PersonAPIToCreate'
       produces:
       - application/json
       responses:
@@ -170,7 +133,7 @@ paths:
         name: wallet
         required: true
         schema:
-          $ref: '#/definitions/aggregate.WalletForUpdateAPI'
+          $ref: '#/definitions/entity.PersonAPI'
       produces:
       - application/json
       responses:

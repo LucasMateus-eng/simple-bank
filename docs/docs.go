@@ -62,7 +62,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/aggregate.WalletForUpdateAPI"
+                            "$ref": "#/definitions/entity.PersonAPI"
                         }
                     }
                 ],
@@ -106,7 +106,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/aggregate.WalletAPI"
+                            "$ref": "#/definitions/entity.PersonAPIToCreate"
                         }
                     }
                 ],
@@ -312,83 +312,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "aggregate.WalletAPI": {
-            "type": "object",
-            "properties": {
-                "account": {
-                    "$ref": "#/definitions/entity.AccountAPI"
-                },
-                "entries": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/entity.EntryAPI"
-                    }
-                },
-                "person": {
-                    "$ref": "#/definitions/entity.PersonAPI"
-                },
-                "transfers": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/valueobject.TransferAPI"
-                    }
-                }
-            }
-        },
-        "aggregate.WalletForUpdateAPI": {
-            "type": "object",
-            "properties": {
-                "account": {
-                    "$ref": "#/definitions/entity.AccountAPI"
-                },
-                "entries": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/entity.EntryAPI"
-                    }
-                },
-                "person": {
-                    "$ref": "#/definitions/entity.PersonAPI"
-                },
-                "transfers": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/valueobject.TransferAPI"
-                    }
-                }
-            }
-        },
-        "entity.AccountAPI": {
-            "type": "object",
-            "properties": {
-                "balance": {
-                    "type": "number"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "owner": {
-                    "type": "string"
-                }
-            }
-        },
-        "entity.EntryAPI": {
-            "type": "object",
-            "properties": {
-                "account_uuid": {
-                    "type": "string"
-                },
-                "amount": {
-                    "type": "number"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "uuid": {
-                    "type": "string"
-                }
-            }
-        },
         "entity.PersonAPI": {
             "type": "object",
             "properties": {
@@ -408,6 +331,26 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "uuid": {
+                    "type": "string"
+                }
+            }
+        },
+        "entity.PersonAPIToCreate": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "is_a_shopkeeper": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "personal_id": {
                     "type": "string"
                 }
             }
