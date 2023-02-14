@@ -7,9 +7,7 @@ CREATE TABLE "wallets" (
   "password" text NOT NULL,
   "is_a_shopkeeper" boolean NOT NULL,
   "balance" decimal NOT NULL,
-  "created_at" timestamptz NOT NULL DEFAULT (now()),
-  "entries" text [],
-  "transfers" text []
+  "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "entries" (
