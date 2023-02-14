@@ -97,13 +97,9 @@ func (w *Wallet) GetEntries() []*entity.Entry {
 
 func (w *Wallet) SetEntries(entries ...*entity.Entry) {
 	if w.entries == nil {
-		w.entries = make([]*entity.Entry, len(entries))
+		w.entries = make([]*entity.Entry, 0)
 	}
-	for _, entryInput := range entries {
-		for i := range w.entries {
-			w.entries[i] = entryInput
-		}
-	}
+	w.entries = append(w.entries, entries...)
 }
 
 func (w *Wallet) GetTransfers() []valueobject.Transfer {
@@ -112,11 +108,7 @@ func (w *Wallet) GetTransfers() []valueobject.Transfer {
 
 func (w *Wallet) SetTransfers(transfers ...valueobject.Transfer) {
 	if w.transfers == nil {
-		w.transfers = make([]valueobject.Transfer, len(transfers))
+		w.transfers = make([]valueobject.Transfer, 0)
 	}
-	for _, transferInput := range transfers {
-		for i := range w.entries {
-			w.transfers[i] = transferInput
-		}
-	}
+	w.transfers = append(w.transfers, transfers...)
 }
