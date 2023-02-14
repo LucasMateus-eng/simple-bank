@@ -45,5 +45,6 @@ func (ea *EntryAPI) FromEntity(entry entity.Entry) {
 
 	ea.UUID = entry.UUID.String()
 	ea.Owner = entry.Owner.String()
+	ea.Amount = entry.Amount
 	ea.CreatedAt = entry.CreatedAt
 }
