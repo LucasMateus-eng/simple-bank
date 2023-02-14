@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/LucasMateus-eng/simple-bank/application/aggregate"
+	"github.com/LucasMateus-eng/simple-bank/application/entity"
 	primaryport "github.com/LucasMateus-eng/simple-bank/application/ports/primary/wallet"
 	secondaryport "github.com/LucasMateus-eng/simple-bank/application/ports/secondary/wallet"
 	valueobject "github.com/LucasMateus-eng/simple-bank/application/value_object"
@@ -43,14 +44,14 @@ func (ws *walletService) Get(id uuid.UUID) (aggregate.Wallet, error) {
 	return wallet, nil
 }
 
-func (ws *walletService) Add(wallet aggregate.Wallet) error {
-	if wallet.IsEmpty() {
-		err := errors.New("dados da carteira não informados")
+func (ws *walletService) Add(person entity.Person) error {
+	if person.IsEmpty() {
+		err := errors.New("dados do correntista não informados")
 		log.Error("Erro ao salvar uma carteira no walletService: ", err.Error())
 		return err
 	}
 
-	err := ws.walletRepo.Add(wallet)
+	err := ws.walletRepo.Add(person)
 	if err != nil {
 		log.Error("Erro ao salvar uma carteira no walletService: ", err.Error())
 		return err
@@ -59,16 +60,16 @@ func (ws *walletService) Add(wallet aggregate.Wallet) error {
 	return nil
 }
 
-func (ws *walletService) Update(wallet aggregate.Wallet) error {
-	if wallet.IsEmpty() {
-		err := errors.New("dados da carteira não informados")
-		log.Errorf("Erro ao atualizar a carteira %s no walletService: ", wallet.GetID(), err.Error())
+func (ws *walletService) Update(person entity.Person) error {
+	if person.IsEmpty() {
+		err := errors.New("dados do correntista não informados")
+		log.Errorf("Erro ao atualizar a carteira do correntista %s no walletService: ", person.UUID.String(), err.Error())
 		return err
 	}
 
-	err := ws.walletRepo.Update(wallet)
+	err := ws.walletRepo.Update(person)
 	if err != nil {
-		log.Errorf("Erro ao atualizar a carteira %s no walletService: ", wallet.GetID(), err.Error())
+		log.Errorf("Erro ao atualizar a carteira do correntista %s no walletService: ", person.UUID.String(), err.Error())
 		return err
 	}
 
