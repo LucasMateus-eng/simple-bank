@@ -6,6 +6,7 @@ import (
 
 	primaryport "github.com/LucasMateus-eng/simple-bank/application/ports/primary/wallet"
 	apiaggregate "github.com/LucasMateus-eng/simple-bank/dto/primary/aggregate"
+	apientity "github.com/LucasMateus-eng/simple-bank/dto/primary/entity"
 	apivalueobject "github.com/LucasMateus-eng/simple-bank/dto/primary/value_object"
 	"github.com/LucasMateus-eng/simple-bank/utils/formatter"
 	"github.com/LucasMateus-eng/simple-bank/utils/logging"
@@ -73,25 +74,25 @@ func (wh *WalletHandler) Get(c echo.Context) error {
 // @Tags wallet
 // @Accept json
 // @Produce json
-// @Param wallet body apiaggregate.WalletAPI true "Wallet DTO for create"
+// @Param wallet body apientity.PersonAPIToCreate true "Wallet DTO for create"
 // @Success 201 {object} formatter.ResponseOKWithData "Wallet successfully created."
 // @Failure 400 {object} formatter.ResponseErrorWithData "Invalid payload."
 // @Failure 500 {object} formatter.ResponseErrorWithData "Failed to create wallet."
 // @Router /wallet [post]
 func (wh *WalletHandler) Add(c echo.Context) error {
-	var body = new(apiaggregate.WalletAPI)
-	if err := c.Bind(&body); err != nil {
+	var body = new(apientity.PersonAPIToCreate)
+	if err := c.Bind(body); err != nil {
 		log.Error("Erro ao criar carteira na API rest: ", err.Error())
 		return formatter.ErrorWithDataJSON(c, http.StatusBadRequest, "Payload inválido", err.Error())
 	}
 
-	wallet, err := body.ToAggregate()
+	person, err := body.ToEntity()
 	if err != nil {
 		log.Error("Erro ao criar carteira na API rest: ", err.Error())
-		return formatter.ErrorWithDataJSON(c, http.StatusInternalServerError, "Erro ao converter para agregado", err.Error())
+		return formatter.ErrorWithDataJSON(c, http.StatusInternalServerError, "Erro ao converter para entidade", err.Error())
 	}
 
-	err = wh.walletService.Add(*wallet)
+	err = wh.walletService.Add(*person)
 	if err != nil {
 		log.Error("Erro ao criar carteira na API rest: ", err.Error())
 		return formatter.ErrorWithDataJSON(c, http.StatusInternalServerError, "Erro ao criar carteira", err.Error())
@@ -107,25 +108,25 @@ func (wh *WalletHandler) Add(c echo.Context) error {
 // @Tags wallet
 // @Accept json
 // @Produce json
-// @Param wallet body apiaggregate.WalletForUpdateAPI true "Wallet DTO for update"
+// @Param wallet body apientity.PersonAPI true "Wallet DTO for update"
 // @Success 204 {object} formatter.ResponseOKWithData "Wallet successfully updated."
 // @Failure 400 {object} formatter.ResponseErrorWithData "Invalid payload."
 // @Failure 500 {object} formatter.ResponseErrorWithData "Failed to update wallet."
 // @Router /wallet [put]
 func (wh *WalletHandler) Update(c echo.Context) error {
-	var body = new(apiaggregate.WalletForUpdateAPI)
-	if err := c.Bind(&body); err != nil {
+	var body = new(apientity.PersonAPI)
+	if err := c.Bind(body); err != nil {
 		log.Error("Erro ao atualizar carteira na API rest: ", err.Error())
 		return formatter.ErrorWithDataJSON(c, http.StatusBadRequest, "Payload inválido", err.Error())
 	}
 
-	wallet, err := body.ToAggregate()
+	person, err := body.ToEntity()
 	if err != nil {
 		log.Error("Erro ao atualizar carteira na API rest: ", err.Error())
-		return formatter.ErrorWithDataJSON(c, http.StatusInternalServerError, "Erro ao converter para agregado", err.Error())
+		return formatter.ErrorWithDataJSON(c, http.StatusInternalServerError, "Erro ao converter para entidade", err.Error())
 	}
 
-	err = wh.walletService.Update(*wallet)
+	err = wh.walletService.Update(*person)
 	if err != nil {
 		log.Error("Erro ao atualizar carteira na API rest: ", err.Error())
 		return formatter.ErrorWithDataJSON(c, http.StatusInternalServerError, "Erro ao atualizar carteira", err.Error())
