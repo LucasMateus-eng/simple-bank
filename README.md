@@ -79,8 +79,7 @@ PG_HOST=localhost
 
 - Se você for um usuário Windows poderá ter problemas na execução dos comandos Make. Se for o seu caso, ou se tiver tendo problemas para executar os comandos Make; independetemente do SO, recomendo executar, no seu terminal, os comandos existentes no arquivo Makefile para cada target dos passos acima (3.1, 3.2, 3.3).
 
-- OBS.: Se você possuir o PostgreSQL instalado em sua máquina poderá ocorrer falhas na conexão da aplicação com o banco.
-- Uma possível solução é:
+- OBS.: Se você possuir o PostgreSQL instalado em sua máquina poderá ocorrer falhas na conexão da aplicação com o banco. Uma possível solução é:
 
   1. coloque as configurações do banco existente em sua máquina nas variáveis de ambiente da aplicação (com a excessão do HOST);
 
@@ -89,18 +88,6 @@ PG_HOST=localhost
 - Uma outra opção é testar via a página swagger da API, localizada em: [http://localhost:8080/api/v1/docs/swagger/index.html]
 
 - Os dtos para as operações no sistema estão disponíveis na documentação swagger.
-
-- Para a criação de uma Wallet é apenas necessário o envio do dto Person (sem o campo uuid):
-
-```bash
-  "person": {
-    "email": "string",
-    "is_a_shopkeeper": true,
-    "name": "string",
-    "password": "string",
-    "personal_id": "string",
-  }
-```
 
 - Para as operações que envolvem alguma data de criação deve-se passar a string no formato:
 
