@@ -23,3 +23,7 @@ migratedown:
 build: migrateup
   go build main.go
 .PHONY:build
+  
+docs:
+  swag init -g adapters/primary/api/rest/router/v1/echo_router.go
+.PHONY:docs
